@@ -1,0 +1,24 @@
+_mydocker()
+{
+  local cur prev cword
+  _get_comp_words_by_ref -n: cur prev cword
+
+  opts="ports logfile"
+
+  if [ "${cword}" -eq 1 ]; then
+    COMPREPLY=( $(compgen -W "${opts}" -- "${cur}") )
+  fi
+
+  if [ "${cword}" -eq 2 ] && [ "${prev}" = "logfile" ]; then
+    logfile_opts="empty ls $(mydocker names)"
+    COMPREPLY=( $(compgen -W "${logfile_opts}" -- "${cur}") )
+  fi
+
+  if [ "${cword}" -ge 3 ]; then
+    name_opts="$(mydocker names)"
+    COMPREPLY=( $(compgen -W "${name_opts}" -- "${cur}") )
+  fi
+
+
+} &&
+complete -F _mydocker mydocker
